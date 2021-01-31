@@ -8,24 +8,27 @@ import (
 
 	"github.com/gorilla/mux"
 )
-
+// defined type Employee 
 type Employee struct {
 	Id   string `json:"Id"`
 	Name string `json:"name"`
 }
-
+// declared a global array 
 var Employees []Employee
 
+// to get root page (/)
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Root page")
 	fmt.Println("Root page")
 }
-
+// to return all employee records (/emplpoyees)
 func returnAllEmployees(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllEmployees")
 	json.NewEncoder(w).Encode(Employees)
 
 }
+
+// to return single employee records (/emplpoyees/{empid})
 func returnSingleEmp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
@@ -38,7 +41,7 @@ func returnSingleEmp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
+// handlers
 func handleRequests() {
 	// http.HandleFunc("/employees", returnAllEmployees)
 	// http.HandleFunc("/", homePage)
