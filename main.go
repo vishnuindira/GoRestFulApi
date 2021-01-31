@@ -26,6 +26,11 @@ func returnAllEmployees(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Employees)
 
 }
+func returnSingleEmp(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key := vars["id"]
+	fmt.Fprintf(w, "Key: "+key)
+}
 
 func handleRequests() {
 	// http.HandleFunc("/employees", returnAllEmployees)
@@ -35,6 +40,7 @@ func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/employees", returnAllEmployees)
+	myRouter.HandleFunc("/employees/{id}", returnSingleEmp)
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
 
