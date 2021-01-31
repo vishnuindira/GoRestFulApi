@@ -56,6 +56,19 @@ func createNewEmp(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(emp)
 }
 
+//delete
+func deleteEmp(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("hi from delete")
+	vars := mux.Vars(r)
+	id := vars["id"]
+	for index, emp := range Employees {
+		if emp.Id == id {
+
+			Employees = append(Employees[:index], Employees[index+1:]...)
+		}
+	}
+}
+
 // handlers
 func handleRequests() {
 	// http.HandleFunc("/employees", returnAllEmployees)
@@ -66,6 +79,7 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/employees", returnAllEmployees)
 	myRouter.HandleFunc("/employee", createNewEmp).Methods("POST")
+	myRouter.HandleFunc("/employee/{id}", deleteEmp).Methods("DELETE")
 	myRouter.HandleFunc("/employee/{id}", returnSingleEmp)
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
