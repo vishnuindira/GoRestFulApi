@@ -8,37 +8,36 @@ import (
 )
 
 type Employee struct {
-	Id          int    `json:"Id"`
-	Name        string `json:"Name"`
-	Designation string `json:"Designation"`
-	Project     string `json:"Project"`
-	Lead        string `json:"Lead"`
+	Id   int    `json:"Id"`
+	Name string `json:"name"`
 }
 
-var Employee []Employee
+var Employees []Employee
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Fprint(w, "Welcome to home page")
-	fmt.Println("hit on home page")
+	fmt.Fprintf(w, "Welcome to the HomePage!")
+	fmt.Println("Endpoint Hit: homePage")
 }
 
-func returnAllEmployee(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: Employee")
-	json.NewEncoder(w).Encode(Employee)
+func returnAllEmployees(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: returnAllEmployees")
+	json.NewEncoder(w).Encode(Employees)
 
 }
-func handleRequest() {
-	http.HandleFunc("/articls", returnAllEmployee)
+
+func handleRequests() {
+	http.HandleFunc("/employees", returnAllEmployees)
 	http.HandleFunc("/", homePage)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func main() {
-	Employee = []Employee{
-		Employee{Id: 1032001, Name: "Vishnu", Designation: "Software engineer", Project: "apple", Lead: "Tovino"},
-		Employee{Id: 1032002, Name: "mohanlal", Designation: "Software engineer", Project: "apple", Lead: "Tovino"},
-	}
-	handleRequest()
+	fmt.Println("Hi")
 
+	Employees = []Employee{
+		Employee{Id: 1032, Name: "Vishnu"},
+		Employee{Id: 1033, Name: "Abhi"},
+		Employee{Id: 1034, Name: "vijay"},
+	}
+	handleRequests()
 }
