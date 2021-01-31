@@ -69,6 +69,26 @@ func deleteEmp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//update PUT
+func updateEmp(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("from update")
+	EmployeeID := mux.Vars(r)["id"]
+	var emp Employee
+
+	reqBody, _ := ioutil.ReadAll(r.Body)
+
+	json.Unmarshal(reqBody, &emp)
+
+	for i, looper := range Employees {
+		if looper.Id == EmployeeID {
+			looper.Id = emp.Id
+			looper.Name = emp.Name
+			Employees = append(Employees[:i], looper)
+			json.NewEncoder(w).Encode(looper)
+		}
+	}
+}
+
 // handlers
 func handleRequests() {
 	// http.HandleFunc("/employees", returnAllEmployees)
@@ -80,6 +100,7 @@ func handleRequests() {
 	myRouter.HandleFunc("/employees", returnAllEmployees)
 	myRouter.HandleFunc("/employee", createNewEmp).Methods("POST")
 	myRouter.HandleFunc("/employee/{id}", deleteEmp).Methods("DELETE")
+	myRouter.HandleFunc("/employee/{id}", updateEmp).Methods("PUT")
 	myRouter.HandleFunc("/employee/{id}", returnSingleEmp)
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
