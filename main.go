@@ -10,15 +10,15 @@ import (
 )
 
 type Employee struct {
-	Id   int    `json:"Id"`
+	Id   string `json:"Id"`
 	Name string `json:"name"`
 }
 
 var Employees []Employee
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage!")
-	fmt.Println("Endpoint Hit: homePage")
+	fmt.Fprintf(w, "Root page")
+	fmt.Println("Root page")
 }
 
 func returnAllEmployees(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +30,14 @@ func returnSingleEmp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 	fmt.Fprintf(w, "Key: "+key)
+
+	for _, emp := range Employees {
+		if emp.Id == key {
+			json.NewEncoder(w).Encode(emp)
+		}
+	}
 }
+
 
 func handleRequests() {
 	// http.HandleFunc("/employees", returnAllEmployees)
@@ -48,9 +55,9 @@ func main() {
 	fmt.Println("Hi")
 
 	Employees = []Employee{
-		Employee{Id: 1032, Name: "Vishnu"},
-		Employee{Id: 1033, Name: "Abhi"},
-		Employee{Id: 1034, Name: "vijay"},
+		Employee{Id: "1032", Name: "Vishnu"},
+		Employee{Id: "1033", Name: "Abhi"},
+		Employee{Id: "1034", Name: "vijay"},
 	}
 	handleRequests()
 }
