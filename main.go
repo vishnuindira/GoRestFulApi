@@ -3,17 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
-// defined type Employee 
+
+// defined type Employee
 type Employee struct {
 	Id   string `json:"Id"`
 	Name string `json:"name"`
 }
-// declared a global array 
+
+// declared a global array
 var Employees []Employee
 
 // to get root page (/)
@@ -21,9 +24,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Root page")
 	fmt.Println("Root page")
 }
+
 // to return all employee records (/emplpoyees)
 func returnAllEmployees(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllEmployees")
+	//fmt.Println("Endpoint Hit: returnAllEmployees")
 	json.NewEncoder(w).Encode(Employees)
 
 }
@@ -41,6 +45,17 @@ func returnSingleEmp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//post
+func createNewEmp(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("hi from create")
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	//fmt.Fprintf(w, "%+v", string(reqBody))
+	var emp Employee
+	json.Unmarshal(reqBody, &emp)
+	Employees = append(Employees, emp)
+	json.NewEncoder(w).Encode(emp)
+}
+
 // handlers
 func handleRequests() {
 	// http.HandleFunc("/employees", returnAllEmployees)
@@ -50,7 +65,8 @@ func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/employees", returnAllEmployees)
-	myRouter.HandleFunc("/employees/{id}", returnSingleEmp)
+	myRouter.HandleFunc("/employee", createNewEmp).Methods("POST")
+	myRouter.HandleFunc("/employee/{id}", returnSingleEmp)
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
 
@@ -60,7 +76,6 @@ func main() {
 	Employees = []Employee{
 		Employee{Id: "1032", Name: "Vishnu"},
 		Employee{Id: "1033", Name: "Abhi"},
-		Employee{Id: "1034", Name: "vijay"},
 	}
 	handleRequests()
 }
