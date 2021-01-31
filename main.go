@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Employee struct {
@@ -26,9 +28,14 @@ func returnAllEmployees(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleRequests() {
-	http.HandleFunc("/employees", returnAllEmployees)
-	http.HandleFunc("/", homePage)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// http.HandleFunc("/employees", returnAllEmployees)
+	// http.HandleFunc("/", homePage)
+	// log.Fatal(http.ListenAndServe(":8080", nil))
+	//using  mux for better api usage
+	myRouter := mux.NewRouter().StrictSlash(true)
+	myRouter.HandleFunc("/", homePage)
+	myRouter.HandleFunc("/employees", returnAllEmployees)
+	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
 
 func main() {
