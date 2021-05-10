@@ -102,7 +102,7 @@ func handleRequests() {
 	myRouter.HandleFunc("/employee/{id}", deleteEmp).Methods("DELETE")
 	myRouter.HandleFunc("/employee/{id}", updateEmp).Methods("PUT")
 	myRouter.HandleFunc("/employee/{id}", returnSingleEmp)
-	log.Fatal(http.ListenAndServe(":8080", myRouter))
+	log.Fatal(http.ListenAndServe(":8089", myRouter))
 }
 
 func main() {
